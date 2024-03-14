@@ -31,7 +31,7 @@ const Button = (props) => (
       props.setShowFeedback(true);
     }}
   >
-    good
+    {props.text}
   </button>
 );
 
@@ -50,16 +50,19 @@ const App = () => {
         <h1>Give Feedback</h1>
 
         <Button
+          text="good"
           feedback={good}
           setFeedback={setGood}
           setShowFeedback={setShowFeedback}
         />
         <Button
+          text="neutral"
           feedback={neutral}
           setFeedback={setNeutral}
           setShowFeedback={setShowFeedback}
         />
         <Button
+          text="bad"
           feedback={bad}
           setFeedback={setBad}
           setShowFeedback={setShowFeedback}
