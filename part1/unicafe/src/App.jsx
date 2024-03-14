@@ -1,17 +1,38 @@
 import { useState } from "react";
 
+const StatisticLine = (props) => (
+  <div>
+    {props.text} {props.value}
+  </div>
+);
 const Statstics = (props) => (
   <div>
-    <div>good {props.good}</div>
-    <div>neutral {props.neutral}</div>
-    <div>bad {props.bad}</div>
-    <div>all {props.good + props.bad + props.neutral}</div>
-    <div>
-      average{" "}
-      {(props.good * 1 + props.neutral * 0 + props.bad * -1) / props.total}
-    </div>
-    <div>positive {(props.good / props.total) * 100}%</div>
+    <StatisticLine text="good" value={props.good} />
+    <StatisticLine text="neutral" value={props.neutral} />
+    <StatisticLine text="bad" value={props.bad} />
+    <StatisticLine text="all" value={props.good + props.bad + props.neutral} />
+    <StatisticLine
+      text="average"
+      value={
+        (props.good * 1 + props.neutral * 0 + props.bad * -1) / props.total
+      }
+    />
+    <StatisticLine
+      text="positive"
+      value={(props.good / props.total) * 100 + "%"}
+    />
   </div>
+);
+
+const Button = (props) => (
+  <button
+    onClick={() => {
+      props.setFeedback(props.feedback + 1);
+      props.setShowFeedback(true);
+    }}
+  >
+    good
+  </button>
 );
 
 const App = () => {
@@ -19,7 +40,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const [feedback, setFeedback] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   let total = good + neutral + bad;
 
@@ -27,34 +48,26 @@ const App = () => {
     <div>
       <div>
         <h1>Give Feedback</h1>
-        <button
-          onClick={() => {
-            setGood(good + 1);
-            setFeedback(true);
-          }}
-        >
-          good
-        </button>
-        <button
-          onClick={() => {
-            setNeutral(neutral + 1);
-            setFeedback(true);
-          }}
-        >
-          neutral
-        </button>
-        <button
-          onClick={() => {
-            setBad(bad + 1);
-            setFeedback(true);
-          }}
-        >
-          bad
-        </button>
+
+        <Button
+          feedback={good}
+          setFeedback={setGood}
+          setShowFeedback={setShowFeedback}
+        />
+        <Button
+          feedback={neutral}
+          setFeedback={setNeutral}
+          setShowFeedback={setShowFeedback}
+        />
+        <Button
+          feedback={bad}
+          setFeedback={setBad}
+          setShowFeedback={setShowFeedback}
+        />
       </div>
       <div>
         <h2>Statstics</h2>
-        {feedback ? (
+        {showFeedback ? (
           <Statstics good={good} neutral={neutral} bad={bad} total={total} />
         ) : (
           <>No feedback given</>
