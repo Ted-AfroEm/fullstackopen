@@ -1,27 +1,39 @@
 import { useState } from "react";
 
 const StatisticLine = (props) => (
-  <div>
-    {props.text} {props.value}
-  </div>
+  <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+  </tr>
 );
 const Statstics = (props) => (
-  <div>
-    <StatisticLine text="good" value={props.good} />
-    <StatisticLine text="neutral" value={props.neutral} />
-    <StatisticLine text="bad" value={props.bad} />
-    <StatisticLine text="all" value={props.good + props.bad + props.neutral} />
-    <StatisticLine
-      text="average"
-      value={
-        (props.good * 1 + props.neutral * 0 + props.bad * -1) / props.total
-      }
-    />
-    <StatisticLine
-      text="positive"
-      value={(props.good / props.total) * 100 + "%"}
-    />
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Feedback</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <StatisticLine text="good" value={props.good} />
+      <StatisticLine text="neutral" value={props.neutral} />
+      <StatisticLine text="bad" value={props.bad} />
+      <StatisticLine
+        text="all"
+        value={props.good + props.bad + props.neutral}
+      />
+      <StatisticLine
+        text="average"
+        value={
+          (props.good * 1 + props.neutral * 0 + props.bad * -1) / props.total
+        }
+      />
+      <StatisticLine
+        text="positive"
+        value={(props.good / props.total) * 100 + "%"}
+      />
+    </tbody>
+  </table>
 );
 
 const Button = (props) => (
