@@ -19,6 +19,8 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const [feedback, setFeedback] = useState(false);
+
   let total = good + neutral + bad;
 
   return (
@@ -28,6 +30,7 @@ const App = () => {
         <button
           onClick={() => {
             setGood(good + 1);
+            setFeedback(true);
           }}
         >
           good
@@ -35,6 +38,7 @@ const App = () => {
         <button
           onClick={() => {
             setNeutral(neutral + 1);
+            setFeedback(true);
           }}
         >
           neutral
@@ -42,6 +46,7 @@ const App = () => {
         <button
           onClick={() => {
             setBad(bad + 1);
+            setFeedback(true);
           }}
         >
           bad
@@ -49,7 +54,11 @@ const App = () => {
       </div>
       <div>
         <h2>Statstics</h2>
-        <Statstics good={good} neutral={neutral} bad={bad} total={total} />
+        {feedback ? (
+          <Statstics good={good} neutral={neutral} bad={bad} total={total} />
+        ) : (
+          <>No feedback given</>
+        )}
       </div>
     </div>
   );
