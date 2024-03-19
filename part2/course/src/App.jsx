@@ -22,12 +22,7 @@ const App = () => {
     ],
   };
 
-  return (
-    // <div>
-    //   <Total parts={course.parts} />
-    // </div>
-    <Course course={course} />
-  );
+  return <Course course={course} />;
 };
 
 export default App;
