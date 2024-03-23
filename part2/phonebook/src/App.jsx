@@ -21,8 +21,14 @@ const App = () => {
     event.preventDefault();
     const nameExist = persons.find((person) => person.name === newName);
     if (nameExist === undefined) {
-      setPersons([...persons, { name: newName, number: newNumber }]);
-      setNewName("");
+      const personContact = { name: newName, number: newNumber };
+      axios
+        .post("http://localhost:3001/persons", personContact)
+        .then((response) => {
+          setPersons([...persons, response.data]);
+          setNewName("");
+          setNewNumber("");
+        });
     } else {
       alert(`${newName} is already added to phonebook`);
     }
@@ -42,7 +48,6 @@ const App = () => {
         setNewName={setNewName}
         setNewNumber={setNewNumber}
       />
-      <div>debug: {newName}</div>
       <h2>Numbers</h2>
       <Persons persons={filterdPersons} />
     </div>
