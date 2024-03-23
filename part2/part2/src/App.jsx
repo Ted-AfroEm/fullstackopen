@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import noteService from "./services/notes";
 import Note from "./components/Note";
 
 const App = () => {
@@ -7,8 +7,8 @@ const App = () => {
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
   useEffect(() => {
-    axios.get("http://localhost:3001/notes").then((response) => {
-      setNotes(response.data);
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes);
     });
   }, []);
 
@@ -17,15 +17,32 @@ const App = () => {
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
-      id: notes.length + 1,
+      // id: notes.length + 1,
     };
-    setNotes([...notes, noteObject]);
-    setNewNote("");
+
+    noteService.create(noteObject).then((returnedNote) => {
+      setNotes([...notes, returnedNote]);
+      setNewNote("");
+    });
   };
   const handleChange = (event) => {
     setNewNote(event.target.value);
   };
 
+  const tootleImportanceOf = (id) => {
+    const note = notes.find((n) => n.id === id);
+    const chnagedNote = { ...note, important: !note.important };
+
+    noteService
+      .update(id, chnagedNote)
+      .then((returnedNote) => {
+        setNotes(notes.map((n) => (n.id !== id ? n : returnedNote)));
+      })
+      .catch((error) => {
+        alert(`the note '${note.content}' was already deleted from server`);
+        setNotes(notes.filter((n) => n.id !== id));
+      });
+  };
   const notesToshow = showAll
     ? notes
     : notes.filter((note) => note.important === true);
@@ -34,8 +51,12 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <ul>
-        {notes.map((note) => (
-          <Note key={note.id} note={note} />
+        {notesToshow.map((note) => (
+          <Note
+            key={note.id}
+            note={note}
+            tootleImportance={() => tootleImportanceOf(note.id)}
+          />
         ))}
       </ul>
       <form onSubmit={addNote}>
