@@ -9,7 +9,7 @@ const App = () => {
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filterQuery, setFilterQuery] = useState("");
 
   useEffect(() => {
     phonebookService.getAll().then((returnedPersons) => {
@@ -32,12 +32,24 @@ const App = () => {
     }
   };
   const filterdPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(filter.toLowerCase())
+    person.name.toLowerCase().includes(filterQuery.toLowerCase())
   );
+
+  const deleteHandle = (person) => {
+    let response = window.confirm(`Delete ${person.name}`);
+    if (response) {
+      phonebookService.deletePerson(person.id).then((deletedPerson) => {
+        const updatedPersons = persons.filter(
+          (person) => person.id !== deletedPerson.id
+        );
+        setPersons(updatedPersons);
+      });
+    }
+  };
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filter={filter} setFilter={setFilter} />
+      <Filter filter={filterQuery} setFilter={setFilterQuery} />
       <h2>Add new</h2>
       <PersonForm
         addName={addName}
@@ -47,7 +59,7 @@ const App = () => {
         setNewNumber={setNewNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={filterdPersons} />
+      <Persons persons={filterdPersons} deleteHandle={deleteHandle} />
     </div>
   );
 };
