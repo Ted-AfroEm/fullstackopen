@@ -20,15 +20,36 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     const nameExist = persons.find((person) => person.name === newName);
+    const personContact = { name: newName, number: newNumber };
     if (nameExist === undefined) {
-      const personContact = { name: newName, number: newNumber };
       phonebookService.create(personContact).then((returnedNewPerson) => {
         setPersons([...persons, returnedNewPerson]);
         setNewName("");
         setNewNumber("");
       });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      let confirmUpdatePhone = window.confirm(
+        `${newName} is already added to phonebook, replaace the old number with a new one?`
+      );
+      if (confirmUpdatePhone) {
+        let updatePerson = persons.filter(
+          (person) => person.name === personContact.name
+        );
+        phonebookService
+          .update(updatePerson[0].id, personContact)
+          .then((returnedUpdated) => {
+            let updatedPersons = persons.map((person) => {
+              if (person.id === returnedUpdated.id) {
+                return returnedUpdated;
+              }
+              return person;
+            });
+
+            setPersons(updatedPersons);
+            setNewName("");
+            setNewNumber("");
+          });
+      }
     }
   };
   const filterdPersons = persons.filter((person) =>

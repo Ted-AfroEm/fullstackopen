@@ -21,4 +21,6 @@ const deletePerson = (id) => {
   return request.then((response) => response.data);
 };
 
+//TODO: update phone number
+
 export default { getAll, create, update, deletePerson };
